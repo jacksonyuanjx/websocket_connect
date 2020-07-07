@@ -59,6 +59,7 @@ class MyQueue(Queue):
 
     def qsize(self):
         """ Reliable implementation of multiprocessing.Queue.qsize() """
+        self.size = SharedCounter(0)
         return self.size.value
 
     def empty(self):
