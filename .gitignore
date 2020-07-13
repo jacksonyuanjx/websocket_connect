@@ -1,2 +1,4 @@
 /node_version
 /__pycache__
+
+.env

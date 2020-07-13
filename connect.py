@@ -4,6 +4,10 @@ import websockets
 import time
 import multiprocessing
 from my_queue import MyQueue
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 
 class BCTWSConnection(multiprocessing.Process):
@@ -24,21 +28,14 @@ class BCTWSConnection(multiprocessing.Process):
             self.connectToServer('wss://{}'.format(self.url), self.UDID, self.token))
 
     async def connectToServer(self, uri, UDID, token):
-        # print(UDID)
-        # print(uri+"/ws/realtime/{}/".format(UDID))
         while True:
             try:
                 async with websockets.connect(uri+"/ws/realtime/{}/".format(UDID), extra_headers={"token": token, "UDID": UDID}) as websocket:
                     print('----BCT realtime service---- Connected.')
                     while True:
-                        # print('---- first line')
                         res = await websocket.recv()
-                        # print('---- after webcoekt.recv()')
-                        # print("----", self.frames.qsize())
                         if self.frames.qsize() > self.cacheSize:
-                            # print('---- inside if stmt')
                             self.get()
-                        # print('--- after if stmt')
                         self.frames.put(res)
             except:
                 print(
@@ -50,7 +47,9 @@ class BCTWSConnection(multiprocessing.Process):
 
 
 if __name__ == "__main__":
-    c_ = BCTWSConnection("YOUR UDID", "YOUR TOKEN")
+    UDID = os.getenv("UDID")
+    TOKEN = os.getenv("TOKEN")
+    c_ = BCTWSConnection(UDID, TOKEN)
     while True:
         f_ = c_.get()
         print(f_)
