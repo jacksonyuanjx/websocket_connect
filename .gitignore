@@ -1,4 +1,7 @@
-/node_version
-/__pycache__
 
-.env
+/python/__pycache__
+/python/.env
+
+/node_js/node_modules
+/node_js/.env
+/node_js/socket_output.txt
